@@ -1,0 +1,31 @@
+version: '3.8'
+
+name: nestjs-ariel-graphql
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      - ..:/workspaces:cached
+      - nestjs-ariel-graphql_node_modules:/workspaces/node_modules
+
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+    network_mode: service:db
+
+  db:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      MONGO_INITDB_DATABASE: nestjs-ariel
+
+volumes:
+  nestjs-ariel-graphql_node_modules:
+  mongo-data:
